@@ -1,13 +1,12 @@
 <html>
   <head> </head>
   <body>
+    <a class="magic-button" href=""
+      ><canvas id="canvas" width="200" height="200"></canvas>
+    </a>
     <script src="https://unpkg.com/rive-js"></script>
-    <div class="container">
-      <canvas id="canvas" width="500" height="500"></canvas>
-      <a id="magic_href" href="#">Magic</a>
-    </div>
     <script>
-      const btn = document.getElementById("magic_href");
+      const btn = document.getElementsByClassName("magic-button")[0];
       const r = new rive.Rive({
         src: "https://alexkmp.github.io/riv/assets/cat_button.riv",
         canvas: document.getElementById("canvas"),
@@ -21,7 +20,7 @@
           const clicked = inputs.find((i) => i.name === "clicked?");
           const waveL = inputs.find((i) => i.name === "waveL?");
           const waveR = inputs.find((i) => i.name === "waveR?");
-          var last_position = {}
+          var last_position = {};
           btn.onmouseover = (e) => {
             hover.value = true;
             hover.fire();
@@ -29,6 +28,7 @@
           btn.onmouseleave = (e) => {
             hover.value = false;
             waveR.value = false;
+            waveL.value = false;
             hover.fire();
           };
           btn.onmousedown = (e) => {
