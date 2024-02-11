@@ -1,0 +1,75 @@
+<html>
+  <head> </head>
+  <body>
+    <script src="https://unpkg.com/rive-js"></script>
+    <div class="container">
+      <canvas id="canvas" width="500" height="500"></canvas>
+      <a id="magic_href" href="#">Magic</a>
+    </div>
+    <script>
+      const btn = document.getElementById("magic_href");
+      const r = new rive.Rive({
+        src: "https://alexkmp.github.io/riv/assets/cat_button.riv",
+        canvas: document.getElementById("canvas"),
+        autoplay: true,
+        artboard: "Get Started",
+        stateMachines: ["State Machine 1"],
+        onLoad: () => {
+          r.resizeToCanvas();
+          const inputs = r.stateMachineInputs("State Machine 1");
+          const hover = inputs.find((i) => i.name === "hover?");
+          const clicked = inputs.find((i) => i.name === "clicked?");
+          const waveL = inputs.find((i) => i.name === "waveL?");
+          const waveR = inputs.find((i) => i.name === "waveR?");
+          var last_position = {}
+          btn.onmouseover = (e) => {
+            hover.value = true;
+            hover.fire();
+          };
+          btn.onmouseleave = (e) => {
+            hover.value = false;
+            waveR.value = false;
+            hover.fire();
+          };
+          btn.onmousedown = (e) => {
+            clicked.value = true;
+            clicked.fire();
+          };
+          btn.onmouseup = (e) => {
+            clicked.value = false;
+            clicked.fire();
+          };
+          btn.onmousemove = (event) => {
+            if (typeof last_position.x != "undefined") {
+              //get the change from last position to this position
+              var deltaX = last_position.x - event.clientX,
+                deltaY = last_position.y - event.clientY;
+
+              //check which direction had the highest amplitude and then figure out direction by checking if the value is greater or less than zero
+              if (Math.abs(deltaX) > Math.abs(deltaY) && deltaX > 0) {
+                //left
+                waveR.value = false;
+                waveL.value = true;
+              } else if (Math.abs(deltaX) > Math.abs(deltaY) && deltaX < 0) {
+                //right
+                waveR.value = true;
+                waveL.value = false;
+              } else if (Math.abs(deltaY) > Math.abs(deltaX) && deltaY > 0) {
+                //up
+              } else if (Math.abs(deltaY) > Math.abs(deltaX) && deltaY < 0) {
+                //down
+              }
+            }
+            waveR.fire();
+            waveL.fire();
+            //set the new last position to the current for next time
+            last_position = {
+              x: event.clientX,
+              y: event.clientY,
+            };
+          };
+        },
+      });
+    </script>
+  </body>
+</html>
